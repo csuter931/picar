@@ -1,12 +1,8 @@
 //declare required modules
 var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
-  , fs = require('fs')
   , static = require('node-static')
-  , sys = require('sys')
   , piblaster = require('pi-blaster.js')
-  , sleep = require('sleep')
-  , argv = require('optimist').argv;
   app.listen(8080);
 
 
