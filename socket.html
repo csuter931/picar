@@ -38,7 +38,7 @@ function SendToPi()
    	{ 
 		//dont send another command until last one doone... its only a little pi
 		window.gyro = 'notready';
-		socket.emit('fromclient', { beta: beta, gamma: gamma } );
+		socket.emit('fromclient', { beta: beta, gamma: gamma, oBeta: oBeta, oGamma: oGamma } );
 		window.gyro = 'ready';
     	}//END if
 
@@ -53,6 +53,7 @@ window.ondeviceorientation = function(event)
     	var tmp_beta, tmp_gamma;
     
     	//steer
+        oBeta = event.beta;
     	tmp_beta = .001167 * event.beta + .14;
     	//iphone beta =  .001167 * event.beta * -1) + .14;
     	if (tmp_beta >= maxbeta) 
@@ -73,7 +74,8 @@ window.ondeviceorientation = function(event)
     	// past -90 (full reverse) it count down from + 90 (which would cause car to go full fwds)
     	// below 0 (full fwds) it counts up (which would get ignored)
 	// this will just confuse the operator so we'll mask i out so it stays in the 0- (-90) range
-    	tmp_gamma = event.gamma;
+    	oGamma = event.gamma;
+	tmp_gamma = event.gamma;
     	if(tmp_gamma > 45)
 	{
 		tmp_gamma = -90; // gone past full reverse

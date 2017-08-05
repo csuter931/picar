@@ -84,7 +84,7 @@ io.sockets.on('connection', function (socket)
 		{
 			//@ 2 Hz
 			logcount = 0;
-			console.log("Beta: "+data.beta+" Gamma: "+data.gamma+" smoothed: "+smoothed_throttle);				
+			console.log("Beta: "+data.beta+" Gamma: "+data.gamma+" oBeta: "+data.oBeta+" oGamma: "+data.oGamma);				
 		}
 		
 		//control car using clever pwm gpio library
