@@ -33,8 +33,8 @@ lastAction = "";
 function emergencyStop()
 {
 	//enter 0 point here specific to your pwm control
-  	piblaster.setPwm(17, .14); //thr
- 	piblaster.setPwm(18, .14); //spd
+  	piblaster.setPwm(17, .15); //thr
+ 	piblaster.setPwm(18, .15); //spd
   	console.log('###EMERGENCY STOP - signal lost or shutting down');
 }//END emergencyStop
 
@@ -88,7 +88,7 @@ io.sockets.on('connection', function (socket)
 		}
 		
 		//control car using clever pwm gpio library
-		piblaster.setPwm(17, smoothed_throttle); //throttle using soft pwm
+		piblaster.setPwm(17, data.gamma); //throttle using soft pwm
 		piblaster.setPwm(18, data.beta); //throttle using soft pwm
 
 		clearInterval(lastAction); //stop emergency stop timer
