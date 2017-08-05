@@ -17,12 +17,14 @@ var minbeta = .105; //l limit
 var mingamma = .105; //backwards limit
 var maxgamma = .175; //forward limit
 
+var isReversed = false;
+
 // This function is called when the page 1st loads on your phone
 //
 $(function()
 {
     //send data to the pi at 20Hz
-    nIntervId = setInterval(SendToPi ,50);
+    nIntervId = setInterval(SendToPi, 50);
  
     window.gyro = 'ready';
     alert('Ready -- Lets race !');
@@ -38,7 +40,7 @@ function SendToPi()
    	{ 
 		//dont send another command until last one doone... its only a little pi
 		window.gyro = 'notready';
-		socket.emit('fromclient', { beta: beta, gamma: gamma, oBeta: oBeta, oGamma: oGamma } );
+		socket.emit('fromclient', { beta: beta, gamma: gamma, oBeta: oBeta, oGamma: oGamma, isReversed: isReversed } );
 		window.gyro = 'ready';
     	}//END if
 
@@ -96,6 +98,18 @@ window.ondeviceorientation = function(event)
     	{
 		tmp_gamma=mingamma;
     	}
+
+	if (tmp_gamma < 0.15 && isReversed == false) {
+	  gamma = 0.12;
+          SendToPi();
+	  gamma = 0.15;
+          SendToPi();
+          isReversed = true;	
+	}
+
+        if (tmp_gamma > 0.15) {
+	  isReversed = false;
+	}
 
     	gamma = tmp_gamma; //update global
   
