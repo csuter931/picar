@@ -10,4 +10,4 @@ source ~/.bashrc
 
 nvm install v8.2.1
 
-npm install socket.io node-static sleep optimist pi-blaster.js
+npm install socket.io node-static pi-blaster.js
