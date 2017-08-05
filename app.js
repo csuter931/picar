@@ -19,16 +19,13 @@ function handler(request, response)
   file.serve(request, response);
 };
 
-var smoothed_throttle = .14;
 var logcount = 0;
-var old_gamma = .14;
-var old_beta = .14;
 
 console.log('Pi Car we server listening on port 8080 visit http://ipaddress:8080/socket.html');
 
-lastAction = "";
+lastAction = null;
 
-//If we lose comms set the servos to neutral
+// If we lose comms set the servos to neutral
 //
 function emergencyStop()
 {
@@ -46,37 +43,10 @@ function emergencyStop()
 //
 io.sockets.on('connection', function (socket) 
 { 
-	//got phone msg
+	// got phone msg
 	socket.on('fromclient', function (data) 
 	{
 		logcount = logcount + 1;
-
-		// rate limit accelration only
-		// we want normal de-cceleration as this doesn't drain the battery
-		if((data.gamma > .14) && (data.gamma > smoothed_throttle)) //fwd accel
-		{
-			//if we went full back to full fwd... skip some rate limiting
-			if(smoothed_throttle < .14)
-			{
-				smoothed_throttle = .14;
-			}
-			// .035 = fwd range; .0035 = .5s .: .01 is roughy 1.5s to full accel @ 20Hz
-			smoothed_throttle += .001;
-		}
-		else if ((data.gamma < .14) && (data.gamma < smoothed_throttle)) //rev accel
-		{ 
-			// if we go full fwd to full back... 
-			if(smoothed_throttle > .14)
-			{
-				smoothed_throttle = .14; 
-			}
-			// rate limit throttle to prevent power resets
-			smoothed_throttle -= .0003;   // reverse is non linear due to brakeing option so make it even slower
-		}
-		else 
-			smoothed_throttle = data.gamma; //slow down normally
-			
-		//smoothed_throttle = data.gamma; //uncomment this line if using dedicated Pi battery pack
 			
 		// dont let char echos slow dn the app; we are running at 20Hz
 		// dont le the console limit this due to slow echoing of chars
@@ -87,12 +57,12 @@ io.sockets.on('connection', function (socket)
 			console.log("Beta: "+data.beta+" Gamma: "+data.gamma+" oBeta: "+data.oBeta+" oGamma: "+data.oGamma+" isReversedSince: "+data.isReversedSince);
 		}
 		
-		//control car using clever pwm gpio library
-		piblaster.setPwm(17, data.gamma); //throttle using soft pwm
-		piblaster.setPwm(18, data.beta); //throttle using soft pwm
+		// control car using clever pwm gpio library
+		piblaster.setPwm(17, data.gamma);
+		piblaster.setPwm(18, data.beta);
 
-		clearInterval(lastAction); //stop emergency stop timer
-		lastAction = setInterval(emergencyStop,2000); //set emergency stop timer for 1 second
+		clearInterval(lastAction); // stop emergency stop timer
+		lastAction = setInterval(emergencyStop, 1000); // set emergency stop timer for 1 second
 				
 	});
 });//END io.sockets.on
@@ -106,4 +76,4 @@ process.on('SIGINT', function()
   console.log("\nGracefully shutting down from SIGINT (Ctrl-C)");
  
   return process.exit();
-});//END process.on 
+});//END process.on
