@@ -17,7 +17,7 @@ var minbeta = .105; //l limit
 var mingamma = .105; //backwards limit
 var maxgamma = .175; //forward limit
 
-var isReversed = false;
+var isReversedSince = null;
 
 // This function is called when the page 1st loads on your phone
 //
@@ -40,7 +40,7 @@ function SendToPi()
    	{ 
 		//dont send another command until last one doone... its only a little pi
 		window.gyro = 'notready';
-		socket.emit('fromclient', { beta: beta, gamma: gamma, oBeta: oBeta, oGamma: oGamma, isReversed: isReversed } );
+		socket.emit('fromclient', { beta: beta, gamma: gamma, oBeta: oBeta, oGamma: oGamma, isReversedSince: isReversedSince } );
 		window.gyro = 'ready';
     	}//END if
 
@@ -99,16 +99,20 @@ window.ondeviceorientation = function(event)
 		tmp_gamma=mingamma;
     	}
 
-	if (tmp_gamma < 0.15 && isReversed == false) {
-	  gamma = 0.12;
-          SendToPi();
-	  gamma = 0.15;
-          SendToPi();
-          isReversed = true;	
+	if (tmp_gamma < 0.15) {
+          var ts = Date.now();
+
+	  if (isReversedSince == null) {
+	    isReversedSince = ts;
+	  } else if ((ts - isReversedSince) < 1000) {
+	    tmp_gamma = 0.12
+	  } else if ((ts - isReversedSince) < 1250) {
+	    tmp_gamma = 0.15
+          }
 	}
 
         if (tmp_gamma > 0.15) {
-	  isReversed = false;
+	  isReversedSince = null;
 	}
 
     	gamma = tmp_gamma; //update global
