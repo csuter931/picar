@@ -17,12 +17,14 @@ var minbeta = .105; //l limit
 var mingamma = .105; //backwards limit
 var maxgamma = .175; //forward limit
 
+var isReversedSince = null;
+
 // This function is called when the page 1st loads on your phone
 //
 $(function()
 {
     //send data to the pi at 20Hz
-    nIntervId = setInterval(SendToPi ,50);
+    nIntervId = setInterval(SendToPi, 50);
  
     window.gyro = 'ready';
     alert('Ready -- Lets race !');
@@ -38,7 +40,7 @@ function SendToPi()
    	{ 
 		//dont send another command until last one doone... its only a little pi
 		window.gyro = 'notready';
-		socket.emit('fromclient', { beta: beta, gamma: gamma } );
+		socket.emit('fromclient', { beta: beta, gamma: gamma, oBeta: oBeta, oGamma: oGamma, isReversedSince: isReversedSince } );
 		window.gyro = 'ready';
     	}//END if
 
@@ -53,6 +55,7 @@ window.ondeviceorientation = function(event)
     	var tmp_beta, tmp_gamma;
     
     	//steer
+        oBeta = event.beta;
     	tmp_beta = .001167 * event.beta + .14;
     	//iphone beta =  .001167 * event.beta * -1) + .14;
     	if (tmp_beta >= maxbeta) 
@@ -73,7 +76,8 @@ window.ondeviceorientation = function(event)
     	// past -90 (full reverse) it count down from + 90 (which would cause car to go full fwds)
     	// below 0 (full fwds) it counts up (which would get ignored)
 	// this will just confuse the operator so we'll mask i out so it stays in the 0- (-90) range
-    	tmp_gamma = event.gamma;
+    	oGamma = event.gamma;
+	tmp_gamma = event.gamma;
     	if(tmp_gamma > 45)
 	{
 		tmp_gamma = -90; // gone past full reverse
@@ -94,6 +98,22 @@ window.ondeviceorientation = function(event)
     	{
 		tmp_gamma=mingamma;
     	}
+
+	if (tmp_gamma < 0.15) {
+          var ts = Date.now();
+
+	  if (isReversedSince == null) {
+	    isReversedSince = ts;
+	  } else if ((ts - isReversedSince) < 1000) {
+	    tmp_gamma = 0.12
+	  } else if ((ts - isReversedSince) < 1250) {
+	    tmp_gamma = 0.15
+          }
+	}
+
+        if (tmp_gamma > 0.15) {
+	  isReversedSince = null;
+	}
 
     	gamma = tmp_gamma; //update global
   
