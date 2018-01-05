@@ -16,9 +16,7 @@ nvm install v8.2.1
 # These dependencies are listed in the `package.json` file
 npm install
 
-# Automatically run the node-server.sh shell script
-# whenever the pi is booted.
-# node-server.sh is a shell script that simply calls `node /path/to/app.js`
-# just as you would if you were starting this app manually.
+# Automatically run the node-server.sh shell script when the pi is booted.
+# node-server.sh simply calls `node /path/to/app.js` just as you otherwise would manually.
 sudo cp node-server.sh /etc/init.d/
 sudo update-rc.d node-server.sh defaults
