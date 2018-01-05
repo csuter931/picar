@@ -4,7 +4,7 @@
 sudo apt update
 sudo apt install -y build-essential git curl
 
-# Install the Node Version Manager
+# Install Node Version Manager
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
 
 source ~/.bashrc
