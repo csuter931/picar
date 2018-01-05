@@ -7,7 +7,9 @@ sudo apt install -y build-essential git curl
 # Install Node Version Manager
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
 
-source ~/.bashrc
+# Load nvm so that we have access to the nvm shell command
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # Install version v8.2.1 of the `$ node` command
 nvm install v8.2.1
