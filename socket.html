@@ -61,7 +61,10 @@ window.ondeviceorientation = function(event)
     	//steer
         oBeta = event.beta;
     	tmp_beta = .001167 * event.beta + .14;
-    	//iphone beta =  .001167 * event.beta * -1) + .14;
+
+	// For iPhones, uncomment out the following line
+	// tmp_beta = tmp_beta * -1;
+
     	if (tmp_beta >= maxbeta) 
     	{
 		tmp_beta=maxbeta;
@@ -82,6 +85,10 @@ window.ondeviceorientation = function(event)
 	// this will just confuse the operator so we'll mask i out so it stays in the 0- (-90) range
     	oGamma = event.gamma;
 	tmp_gamma = event.gamma;
+
+	// For iPhones, uncomment out the following line
+	// tmp_gamma = tmp_gamma * -1
+
     	if(tmp_gamma > 45)
 	{
 		tmp_gamma = -90; // gone past full reverse
@@ -92,7 +99,6 @@ window.ondeviceorientation = function(event)
 	}
 	
     	tmp_gamma = .00125 * tmp_gamma + .175;
-    	//iphone gamma = -0.00125 * Math.round(event.gamma) + .175;
 
     	if (tmp_gamma >= maxgamma) 
     	{
