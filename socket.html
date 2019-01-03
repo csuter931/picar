@@ -2,7 +2,6 @@
 <head>
 <script src="jquery-2.0.3.min.js" language="javascript"></script>
 <script src="/socket.io/socket.io.js"></script>
-<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0;" />
 <script>
 
 //------ Define your variables here
@@ -17,6 +16,11 @@ var minbeta = .105; //l limit
 var mingamma = .105; //backwards limit
 var maxgamma = .175; //forward limit
 
+//default to stopped facing forward
+var beta = .15;
+var oBeta = .15;
+var gamma = .15;
+var oGamma = .15;
 var isReversedSince = null;
 
 // This function is called when the page 1st loads on your phone
