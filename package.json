@@ -4,6 +4,6 @@
   "dependencies": {
     "socket.io": "2.0.3",
     "node-static": "0.7.9",
-    "pi-blaster.js": "0.1.1"
+    "pi-blaster.js": "0.1.3"
   }
 }
