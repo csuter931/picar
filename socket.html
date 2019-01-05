@@ -89,25 +89,27 @@ window.ondeviceorientation = function(event)
 	// For iPhones, uncomment out the following line
 	// tmp_gamma = tmp_gamma * -1
 
-    	if(tmp_gamma > 45)
-	{
+
+	// Ensure our gamma range is from -90 to 0
+    	if(tmp_gamma > 45) {
 		tmp_gamma = -90; // gone past full reverse
-	}
-	else if (tmp_gamma > 0)	
-	{
+	}  else if (tmp_gamma > 0)	{
 		tmp_gamma = 0;	//gone past full fwds
 	}
-	
-    	tmp_gamma = .00125 * tmp_gamma + .175;
 
-    	if (tmp_gamma >= maxThrottlePwm) 
-    	{
-		tmp_gamma=maxThrottlePwm;
-    	}
-    	if (tmp_gamma <= minThrottlePwm) 
-    	{
-		tmp_gamma=minThrottlePwm;
-    	}
+
+	// Convert gamma value into PWM value, with plateau between -65 and -25 where the car will be at
+	// a standstill
+	var standstillPlateauMin = -65;
+	var standstillPlateauMax = -25;
+	if (tmp_gamma > standstillPlateauMax) {
+		tmp_gamma = tmp_gamma * 0.002 + maxThrottlePwm;
+	} else if (tmp_gamma < standstillPlateauMin) {
+		tmp_gamma = tmp_gamma * 0.002 + maxThrottlePwm + 0.08
+	} else {
+		tmp_gamma = 0.15
+	}
+
 
 	if (tmp_gamma < 0.15) {
           var ts = Date.now();
