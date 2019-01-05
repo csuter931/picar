@@ -9,12 +9,12 @@ var socket = io.connect(window.location.hostname+':8080');
 var nIntervId;
  
 //steering min and max pwm cmds
-var maxbeta = .175; //r limit
-var minbeta = .105; //l limit
+var maxSteeringPwm = .175; //r limit
+var minSteeringPwm = .105; //l limit
 
 //throttle min and max pwm cmds
-var mingamma = .105; //backwards limit
-var maxgamma = .175; //forward limit
+var minThrottlePwm = .105; //backwards limit
+var maxThrottlePwm = .175; //forward limit
 
 //default to stopped facing forward
 var steeringPwm = .15;
@@ -65,13 +65,13 @@ window.ondeviceorientation = function(event)
 	// For iPhones, uncomment out the following line
 	// tmp_beta = tmp_beta * -1;
 
-    	if (tmp_beta >= maxbeta) 
+    	if (tmp_beta >= maxSteeringPwm) 
     	{
-		tmp_beta=maxbeta;
+		tmp_beta=maxSteeringPwm;
     	}
-    	if (tmp_beta <= minbeta) 
+    	if (tmp_beta <= minSteeringPwm) 
     	{
-		tmp_beta=minbeta;
+		tmp_beta=minSteeringPwm;
     	}
     
     	steeringPwm = tmp_beta; //update global
@@ -100,13 +100,13 @@ window.ondeviceorientation = function(event)
 	
     	tmp_gamma = .00125 * tmp_gamma + .175;
 
-    	if (tmp_gamma >= maxgamma) 
+    	if (tmp_gamma >= maxThrottlePwm) 
     	{
-		tmp_gamma=maxgamma;
+		tmp_gamma=maxThrottlePwm;
     	}
-    	if (tmp_gamma <= mingamma) 
+    	if (tmp_gamma <= minThrottlePwm) 
     	{
-		tmp_gamma=mingamma;
+		tmp_gamma=minThrottlePwm;
     	}
 
 	if (tmp_gamma < 0.15) {
