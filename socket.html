@@ -116,9 +116,9 @@ window.ondeviceorientation = function(event)
 
 	  if (isReversedSince == null) {
 	    isReversedSince = ts;
-	  } else if ((ts - isReversedSince) < 1000) {
+	  } else if ((ts - isReversedSince) < 100) {
 	    tmp_gamma = 0.12
-	  } else if ((ts - isReversedSince) < 1250) {
+	  } else if ((ts - isReversedSince) < 250) {
 	    tmp_gamma = 0.15
           }
 	}
