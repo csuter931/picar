@@ -102,10 +102,10 @@ window.ondeviceorientation = function(event)
 	// a standstill
 	var standstillPlateauMin = -65;
 	var standstillPlateauMax = -25;
-	if (tmp_gamma > standstillPlateauMax) {
+	if (tmp_gamma < standstillPlateauMin) {
+		tmp_gamma = tmp_gamma * 0.002 + maxThrottlePwm + 0.08;
+	} else if (tmp_gamma > standstillPlateauMax) {
 		tmp_gamma = tmp_gamma * 0.002 + maxThrottlePwm;
-	} else if (tmp_gamma < standstillPlateauMin) {
-		tmp_gamma = tmp_gamma * 0.002 + maxThrottlePwm + 0.08
 	} else {
 		tmp_gamma = 0.15
 	}
