@@ -17,10 +17,10 @@ var mingamma = .105; //backwards limit
 var maxgamma = .175; //forward limit
 
 //default to stopped facing forward
-var beta = .15;
-var oBeta = .15;
-var gamma = .15;
-var oGamma = .15;
+var steeringPwm = .15;
+var gyroBeta = 0;
+var throttlePwm = .15;
+var gyroGamma = 0;
 var isReversedSince = null;
 
 // This function is called when the page 1st loads on your phone
@@ -44,7 +44,7 @@ function SendToPi()
    	{ 
 		//dont send another command until last one doone... its only a little pi
 		window.gyro = 'notready';
-		socket.emit('fromclient', { beta: beta, gamma: gamma, oBeta: oBeta, oGamma: oGamma, isReversedSince: isReversedSince } );
+		socket.emit('fromclient', { steeringPwm: steeringPwm, throttlePwm: throttlePwm, gyroBeta: gyroBeta, gyroGamma: gyroGamma, isReversedSince: isReversedSince } );
 		window.gyro = 'ready';
     	}//END if
 
@@ -59,8 +59,8 @@ window.ondeviceorientation = function(event)
     	var tmp_beta, tmp_gamma;
     
     	//steer
-        oBeta = event.beta;
-    	tmp_beta = .001167 * event.beta + .14;
+        gyroBeta = event.beta;
+    	tmp_beta = .001167 * gyroBeta + .14;
 
 	// For iPhones, uncomment out the following line
 	// tmp_beta = tmp_beta * -1;
@@ -74,7 +74,7 @@ window.ondeviceorientation = function(event)
 		tmp_beta=minbeta;
     	}
     
-    	beta = tmp_beta; //update global
+    	steeringPwm = tmp_beta; //update global
 
     	// throttle...
 	// rather than going 0-360 gamma counts in + or - 90 degree quadrants.
@@ -83,7 +83,7 @@ window.ondeviceorientation = function(event)
     	// past -90 (full reverse) it count down from + 90 (which would cause car to go full fwds)
     	// below 0 (full fwds) it counts up (which would get ignored)
 	// this will just confuse the operator so we'll mask i out so it stays in the 0- (-90) range
-    	oGamma = event.gamma;
+    	gyroGamma = event.gamma;
 	tmp_gamma = event.gamma;
 
 	// For iPhones, uncomment out the following line
@@ -125,7 +125,7 @@ window.ondeviceorientation = function(event)
 	  isReversedSince = null;
 	}
 
-    	gamma = tmp_gamma; //update global
+    	throttlePwm = tmp_gamma; //update global
   
     
 }//END ondviceorientation

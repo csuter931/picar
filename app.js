@@ -26,8 +26,8 @@ lastAction = null;
 function emergencyStop()
 {
 	//enter 0 point here specific to your pwm control
-  	piblaster.setPwm(17, .15); //thr
- 	piblaster.setPwm(18, .15); //spd
+  	piblaster.setPwm(17, .15); // Throttle
+ 	piblaster.setPwm(18, .15); // Steering
   	console.log('###EMERGENCY STOP - signal lost or shutting down');
 }//END emergencyStop
 
@@ -50,12 +50,12 @@ io.sockets.on('connection', function (socket)
 		{
 			//@ 2 Hz
 			logcount = 0;
-			console.log("Beta: "+data.beta+" Gamma: "+data.gamma+" oBeta: "+data.oBeta+" oGamma: "+data.oGamma+" isReversedSince: "+data.isReversedSince);
+			console.log(data);
 		}
 		
 		// control car using clever pwm gpio library
-		piblaster.setPwm(17, data.gamma);
-		piblaster.setPwm(18, data.beta);
+		piblaster.setPwm(17, data.throttlePwm);
+		piblaster.setPwm(18, data.steeringPwm);
 
 		clearInterval(lastAction); // stop emergency stop timer
 		lastAction = setInterval(emergencyStop, 1000); // set emergency stop timer for 1 second
