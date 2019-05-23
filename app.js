@@ -1,5 +1,15 @@
+
+var path = require('path')
+var fs = require('fs')
+var https = require('https')
+
+var certOptions = {
+  key: fs.readFileSync(path.resolve('/home/pi/picar/server.key')),
+  cert: fs.readFileSync(path.resolve('/home/pi/picar/server.crt'))
+}
+
 //declare required modules
-var app = require('http').createServer(handler)
+var app = require('https').createServer(certOptions, handler)
   , io = require('socket.io').listen(app)
   , static = require('node-static')
   , piblaster = require('pi-blaster.js')
