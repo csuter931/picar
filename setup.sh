@@ -22,3 +22,11 @@ npm install
 # node-server.sh simply calls `node /path/to/app.js` just as you otherwise would manually.
 sudo cp node-server.sh /etc/init.d/
 sudo update-rc.d node-server.sh defaults
+
+# Generate self signed SSL Certificate
+
+openssl genrsa -passout pass:x -out server.pass.key 2048
+openssl rsa -passin pass:x -in server.pass.key -out server.key
+rm server.pass.key
+openssl req -new -key server.key -out server.csr
+openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.crt
